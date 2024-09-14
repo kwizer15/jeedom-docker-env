@@ -19,3 +19,6 @@ logs:
 bash:
 	$(docker) compose exec php bash
 .PHONY: bash
+
+test:
+	$(docker) compose run php vendor/bin/phpunit
