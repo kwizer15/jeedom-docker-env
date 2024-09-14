@@ -4,3 +4,13 @@ services:
       context: .docker/php
     volumes:
       - ./core:/srv
+
+  db:
+    image: mariadb:${DB_VERSION:-10.6}
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+    volumes:
+      - database:/var/lib/mysql:rw
+
+volumes:
+  database:
