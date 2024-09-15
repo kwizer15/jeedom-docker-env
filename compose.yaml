@@ -3,12 +3,18 @@ services:
     build:
       context: .docker/php
     volumes:
-      - ./jeedom/${JEEDOM_CORE_PATH}:/srv
+      - ./jeedom/${JEEDOM_CORE_PATH}:${WEBSERVER_HOME:-/srv}
+    working_dir: ${WEBSERVER_HOME:-/srv}
+    ports:
+      - "${WEBSERVER_PORT:-80}:80"
 
   db:
     image: mariadb:${DB_VERSION:-10.6}
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_NAME:-jeedom}
+      MYSQL_USER: ${DB_USER:-jeedom}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-jeedom}
     volumes:
       - database:/var/lib/mysql:rw
 
