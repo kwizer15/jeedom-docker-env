@@ -1,4 +1,5 @@
 /.env
 /.gitmodules
+/.db_initialized
 /jeedom/*
 !/jeedom/.gitignore

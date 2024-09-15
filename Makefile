@@ -23,6 +23,10 @@ $(CORE_PATH)/composer.lock: $(CORE_PATH)/composer.json
 $(CORE_PATH)/vendor/phpunit:
 	$(docker) compose run php composer require --dev phpunit/phpunit
 
+.db_initialized:
+	$(docker) compose exec php php tests/bootstrap.php
+	touch $@
+
 build:
 	$(docker) compose build php
 .PHONY: build
@@ -30,6 +34,7 @@ build:
 up: $(CORE_PATH)/core/config/common.config.php
 	$(docker) compose up --detach --remove-orphans
 	$(MAKE) $(CORE_PATH)/composer.lock
+	$(MAKE) .db_initialized
 .PHONY: up
 
 stop:
