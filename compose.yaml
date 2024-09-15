@@ -3,7 +3,7 @@ services:
     build:
       context: .docker/php
     volumes:
-      - ./core:/srv
+      - ./jeedom/${JEEDOM_CORE_PATH}:/srv
 
   db:
     image: mariadb:${DB_VERSION:-10.6}
