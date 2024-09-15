@@ -1,14 +1,22 @@
 docker:=$(shell which docker)
 git:=$(shell which git)
 
-core:
-	$(git) submodule update --init
+include .env
+
+.env: .env.dist
+	cp .env.dist .env
+
+jeedom/$(JEEDOM_CORE_PATH):
+	$(git) submodule add --force $(JEEDOM_CORE_REPOSITORY) jeedom/$(JEEDOM_CORE_PATH)
+	$(git) submodule update --init --recursive
+	$(git) reset .gitmodules
+	$(git) reset jeedom/$(JEEDOM_CORE_PATH)
 
 build:
 	$(docker) compose build php
 .PHONY: build
 
-up: core
+up: jeedom/$(JEEDOM_CORE_PATH)
 	$(docker) compose up --detach
 .PHONY: up
 
@@ -20,5 +28,15 @@ bash:
 	$(docker) compose exec php bash
 .PHONY: bash
 
+remove:
+	$(docker) compose down
+	rm -rf jeedom/$(JEEDOM_CORE_PATH)
+.PHONY: remove
+
+own:
+	sudo chown $(shell id -u):$(shell id -g) -R jeedom/$(JEEDOM_CORE_PATH)
+.PHONY: own
+
 test:
 	$(docker) compose run php vendor/bin/phpunit
+.PHONY: test
