@@ -3,3 +3,4 @@
 /.db_initialized
 /jeedom/*
 !/jeedom/.gitignore
+/compose.override.yaml

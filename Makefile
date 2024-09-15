@@ -8,7 +8,7 @@ include .env
 	cp .env.dist .env
 
 $(CORE_PATH):
-	$(git) submodule add --force $(JEEDOM_CORE_REPOSITORY) $(CORE_PATH)
+	$(git) submodule add -b $(JEEDOM_CORE_BRANCH) --force $(JEEDOM_CORE_REPOSITORY) $(CORE_PATH)
 	$(git) submodule update --init --recursive
 	$(git) reset .gitmodules
 	$(git) reset $(CORE_PATH)
@@ -26,6 +26,9 @@ $(CORE_PATH)/vendor/phpunit:
 .db_initialized:
 	$(docker) compose exec php php tests/bootstrap.php
 	touch $@
+
+compose.override.yaml: compose.override.yaml.dist
+	cp $< $@
 
 build:
 	$(docker) compose build php
@@ -51,6 +54,7 @@ bash/%:
 remove: own
 	$(docker) compose down
 	rm -rf $(CORE_PATH)
+	rm -rf .db_initialized
 .PHONY: remove
 
 own:
