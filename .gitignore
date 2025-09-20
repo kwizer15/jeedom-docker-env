@@ -4,3 +4,5 @@
 /jeedom/*
 !/jeedom/.gitignore
 /compose.override.yaml
+/.env.influxdb2-admin-*
+/.php-cs-fixer.cache
